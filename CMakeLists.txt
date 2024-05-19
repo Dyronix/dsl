@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
 
-option(DSL_STATIC_LIB "Option to make DSL a static or shared library" ON)
-
 SET(PROJECT_NAME "dsl")
 SET(PROJECT_NAME_UPPER "")
 
@@ -31,8 +29,6 @@ if(MSVC)
 	string (REPLACE "/D_WINDOWS" "" CMAKE_CUSTOM_C_FLAGS ${CMAKE_C_FLAGS})
 	string (REPLACE "/DWIN32" "" CMAKE_CUSTOM_C_FLAGS ${CMAKE_CUSTOM_C_FLAGS})
 	SET(CMAKE_C_FLAGS "${CMAKE_CUSTOM_C_FLAGS}" CACHE STRING "" FORCE)
-
-    add_definitions(-DDSL_COMPILER_MSVC)
 endif()
 
 # Use C++ 17 as a standard
@@ -42,13 +38,4 @@ SET(CMAKE_DEBUG_POSTFIX _d)
 # Enable folder structure in the IDE
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Some easy access to folders within this repository
-SET(SOURCE_DSL_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/source/dsl)
-
-MESSAGE(STATUS "SOURCE_DSL_DIRECTORY: ${SOURCE_DSL_DIRECTORY}")
-
-# Specify the usage of UNICODE
-add_definitions(-DUNICODE)
-add_definitions(-D_UNICODE)
-
-add_subdirectory(${SOURCE_DSL_DIRECTORY})
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/source/dsl)

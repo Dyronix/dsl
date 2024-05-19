@@ -12,52 +12,61 @@ MACRO(GROUPSOURCES curdir folder_name)
     ENDFOREACH()
 ENDMACRO(GROUPSOURCES)
 
+option(DSL_STATIC_LIB "Option to make DSL a static or shared library" ON)
+
+# -------------------------------
+# Setup lib
+# -------------------------------
 if(DSL_STATIC_LIB)
     add_library(dsl STATIC)
 else()
     add_library(dsl SHARED)
 endif()
 
+if(MSVC)
+    add_definitions(-DDSL_COMPILER_MSVC)
+endif()
+
 # Sources
 ## private sources
 target_sources(dsl PRIVATE 
-    ${SOURCE_DSL_DIRECTORY}/private/util/blob.cpp
-    ${SOURCE_DSL_DIRECTORY}/private/util/blob_view.cpp
-    ${SOURCE_DSL_DIRECTORY}/private/util/blob_reader.cpp
-    ${SOURCE_DSL_DIRECTORY}/private/util/blob_writer.cpp
-    ${SOURCE_DSL_DIRECTORY}/private/util/pointer_math.cpp
-    ${SOURCE_DSL_DIRECTORY}/private/util/string_op.cpp)
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private/util/blob.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private/util/blob_view.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private/util/blob_reader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private/util/blob_writer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private/util/pointer_math.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private/util/string_op.cpp)
 
 ## public sources
 target_sources(dsl PUBLIC 
     ### fmt
-    ${SOURCE_DSL_DIRECTORY}/public/fmt/core.h
-    ${SOURCE_DSL_DIRECTORY}/public/fmt/format-inl.h
-    ${SOURCE_DSL_DIRECTORY}/public/fmt/format.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/fmt/core.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/fmt/format-inl.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/fmt/format.h
 
-    ${SOURCE_DSL_DIRECTORY}/public/util/hash.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/string_op.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/defines.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/blob.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/blob_view.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/blob_reader.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/blob_writer.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/pointer_math.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/color.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/memory_size.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/log.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/assert.h
-    ${SOURCE_DSL_DIRECTORY}/public/util/types.h)
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/hash.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/string_op.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/defines.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/blob.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/blob_view.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/blob_reader.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/blob_writer.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/pointer_math.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/color.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/memory_size.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/log.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/assert.h
+    ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public/util/types.h)
 
 # Create the project filters
-GROUPSOURCES(${SOURCE_DSL_DIRECTORY}/private private)
-GROUPSOURCES(${SOURCE_DSL_DIRECTORY}/public public)
+GROUPSOURCES(${CMAKE_CURRENT_LIST_DIR}/source/dsl/private private)
+GROUPSOURCES(${CMAKE_CURRENT_LIST_DIR}/source/dsl/public public)
 
 # Private includes
-target_include_directories(dsl PRIVATE ${SOURCE_DSL_DIRECTORY}/private)
+target_include_directories(dsl PRIVATE ${CMAKE_CURRENT_LIST_DIR}/source/dsl/private)
 
 # Public includes
-target_include_directories(dsl PUBLIC ${SOURCE_DSL_DIRECTORY}/public)
+target_include_directories(dsl PUBLIC ${CMAKE_CURRENT_LIST_DIR}/source/dsl/public)
 
 # Compile definitions
 if(WIN32)
